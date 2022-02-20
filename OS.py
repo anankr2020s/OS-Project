@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import tkinter as tk
 from tkinter import ttk
 from xml.etree.ElementInclude import include
@@ -23,7 +25,7 @@ data = cg.get_price(
     include_market_cap='true'
     )
 
-path = 'C:/Users/USER/OS-Project/test.csv'
+path = '/home/pi/project-os/OS-Project/test.csv'
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 def show_frame(frame):
@@ -76,7 +78,8 @@ def currency_changed():
     )
 
 window = tk.Tk()
-window.attributes('-fullscreen', True)
+window.attributes('-zoomed', True)
+window.title("Cryptocurrency Monitor")
 
 window.rowconfigure(0, weight=1)
 window.columnconfigure(0, weight=1)
@@ -90,18 +93,11 @@ frame5 = tk.Frame(window)
 for frame in (frame1, frame2, frame3, frame4,frame5):
     frame.grid(row=0,column=0,sticky='nsew')
 
-#=========== Menu Bar
-menu_bar = tk.Menu(window)
-window.config(menu=menu_bar)
-file_menu = tk.Menu(menu_bar, tearoff=0)
-menu_bar.add_cascade(label='Close', command=window.destroy) 
-file_menu.add_separator()
-    
 #==================Frame 1 code
 frame1_title =  tk.Label(frame1, text='Cryptocurrency Monitor', font='times 55 bold',fg="#44415e")
 frame1_title.place(x=700, y=80)
 
-img_1 = tk.PhotoImage(file="All_coin.png")
+img_1 = tk.PhotoImage(file="/home/pi/project-os/OS-Project/All_coin.png")
 ttk.Label(frame1, image=img_1).place(x=100, y=100)
 
 #==================function change colour button
@@ -184,7 +180,7 @@ def update_coin():
 frame2_title=  tk.Label(frame2, text='Bitcoin', font='times 35 bold',fg="#282b36") 
 frame2_title.place(x=700, y=100)
 
-img_2 = tk.PhotoImage(file="bitcoin.png")
+img_2 = tk.PhotoImage(file="/home/pi/project-os/OS-Project/Bitcoin.png")
 ttk.Label(frame2, image=img_2).place(x=120, y=20)
 
 # Grpah Code
@@ -242,7 +238,7 @@ frame2_btn_back.pack(fill='x',ipady=15,side='bottom')
 frame3_title=  tk.Label(frame3, text='Ethereum',font='times 35 bold',fg="#282b36")
 frame3_title.place(x=700, y=100)
 
-img_3 = tk.PhotoImage(file="ethereum.png")
+img_3 = tk.PhotoImage(file="/home/pi/project-os/OS-Project/Ethereum.png")
 ttk.Label(frame3, image=img_3).place(x=120, y=20)
 
 eth_fg1 = Figure(figsize=(5,5), dpi=100)
@@ -293,7 +289,7 @@ frame3_btn_back.pack(fill='x',ipady=15,side='bottom')
 frame4_title=  tk.Label(frame4, text='Dogecoin',font='times 35 bold',fg="#282b36")
 frame4_title.place(x=700, y=100)
 
-img_4 = tk.PhotoImage(file="dogecoin.png")
+img_4 = tk.PhotoImage(file="/home/pi/project-os/OS-Project/Dogecoin.png")
 ttk.Label(frame4, image=img_4).place(x=120, y=20)
 
 doge_fg1 = Figure(figsize=(5,5), dpi=100)
@@ -356,7 +352,7 @@ frame5_table.pack(fill='both',expand=True)
 frame5_btn_back = tk.Button(frame5, text='Home',font='Cambria 13 bold',fg="white",command=lambda:show_frame(frame1),bg='#6262cc')
 frame5_btn_back.pack(fill='x',ipady=15,side='bottom')
 
-if not os.path.isfile('test.csv'):
+if not os.path.isfile('/home/pi/project-os/OS-Project/test.csv'):
     create_csv()
 show_frame(frame1)
 update_coin()
