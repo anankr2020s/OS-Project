@@ -22,6 +22,8 @@ data = cg.get_price(
     include_24hr_vol='true',
     include_market_cap='true'
     )
+
+path = 'C:/Users/USER/OS-Project/test.csv'
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 def show_frame(frame):
@@ -29,7 +31,7 @@ def show_frame(frame):
 
 def create_csv():
     print('Creating CSV...')
-    with open('C:/Users/USER/OS-Project/test.csv', 'w', newline='') as csvfile:
+    with open(path, 'w', newline='') as csvfile:
         fieldnames = ['Time',
                       'bitcoin[usb]', '[bitcoin]usd_24h_change', 'bitcoin[thb]', '[bitcoin]thb_24h_change',
                       'ethereum[usb]', '[ethereum]usd_24h_change', 'ethereum[thb]', '[ethereum]thb_24h_change',
@@ -41,7 +43,7 @@ def create_csv():
 def save_data():
     print('Saving data...')
     localtime = time.localtime()
-    with open('C:/Users/USER/OS-Project/test.csv', 'a', newline='') as csvfile:
+    with open(path, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow([time.strftime("%d/%m/%Y %H:%M:%S", localtime),
         data['bitcoin']['usd'], data['bitcoin']['usd_24h_change'], data['bitcoin']['thb'], data['bitcoin']['thb_24h_change'],
@@ -52,7 +54,7 @@ def save_data():
 
 def show_data():
     frame5_table.delete(*frame5_table.get_children())
-    with open('C:/Users/USER/OS-Project/test.csv', 'r') as csvfile:
+    with open(path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             frame5_table.insert('',0,values=(row['Time'],row['bitcoin[usb]'],row['bitcoin[thb]'],
