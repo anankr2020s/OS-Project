@@ -22,7 +22,7 @@ def show_frame(frame):
 
 def create_csv():
     print('Creating CSV...')
-    with open('E:/OS/test.csv', 'w', newline='') as csvfile:
+    with open('D:/OS-Project/test.csv', 'w', newline='') as csvfile:
         fieldnames = ['Time',
                       'bitcoin[usb]', '[bitcoin]usd_24h_change', 'bitcoin[thb]', '[bitcoin]thb_24h_change',
                       'ethereum[usb]', '[ethereum]usd_24h_change', 'ethereum[thb]', '[ethereum]thb_24h_change',
@@ -35,7 +35,7 @@ def save_data():
     print('Saving data...')
     data = cg.get_price(ids=['bitcoin', 'ethereum', 'dogecoin'], vs_currencies=['usd', 'thb'], include_24hr_change='true')
     localtime = time.localtime()
-    with open('E:/OS/test.csv', 'a', newline='') as csvfile:
+    with open('D:/OS-Project/test.csv', 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow([time.strftime("%d/%m/%Y %H:%M:%S", localtime),
         data['bitcoin']['usd'], data['bitcoin']['usd_24h_change'], data['bitcoin']['thb'], data['bitcoin']['thb_24h_change'],
@@ -46,7 +46,7 @@ def save_data():
 
 def show_data():
     frame5_table.delete(*frame5_table.get_children())
-    with open('E:/OS/test.csv', 'r') as csvfile:
+    with open('D:/OS-Project/test.csv', 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             frame5_table.insert('',0,values=(row['Time'],row['bitcoin[usb]'],row['bitcoin[thb]'],
@@ -90,8 +90,8 @@ menu_bar.add_cascade(label='Close', command=window.destroy)
 file_menu.add_separator()
     
 #==================Frame 1 code
-frame1_title =  tk.Label(frame1, text='Cryptocurrency Monitor', font='times 55')
-frame1_title.place(x=700, y=100)
+frame1_title =  tk.Label(frame1, text='Cryptocurrency Monitor', font='times 55 bold',fg="#44415e")
+frame1_title.place(x=700, y=80)
 
 img_1 = tk.PhotoImage(file="All_coin.png")
 ttk.Label(frame1, image=img_1).place(x=100, y=100)
@@ -100,41 +100,41 @@ ttk.Label(frame1, image=img_1).place(x=100, y=100)
 btc_btn = tk.Button(
     frame1, 
     text='Bitcoin : %.2f USD  %.2f'%(data['bitcoin']['usd'], data['bitcoin']['usd_24h_change']),
-    font='times 32',
+    font='Bahnschrift 32',fg="white",
     width=30,
-    bg='#FF6B6B' if data['bitcoin']['usd_24h_change'] < 0 else '#6BFF6B',
+    bg='#FF6B6B' if data['bitcoin']['usd_24h_change'] < 0 else '#5D8D73',
     command=lambda:show_frame(frame2))
-btc_btn.place(x=700, y=300)
+btc_btn.place(x=700, y=250)
 
 eth_btn = tk.Button(
     frame1, 
     text='Ethereum : %.2f USD  %.2f'%(data['ethereum']['usd'], data['ethereum']['usd_24h_change']),
-    font='times 32',
+    font='Bahnschrift 32',fg="white",
     width=30,
-    bg='#FF6B6B' if data['ethereum']['usd_24h_change'] < 0 else '#6BFF6B',
+    bg='#FF6B6B' if data['ethereum']['usd_24h_change'] < 0 else '#5D8D73',
     command=lambda:show_frame(frame3))
-eth_btn.place(x=700, y=400)
+eth_btn.place(x=700, y=350)
 
 doge_btn = tk.Button(
     frame1, 
     text='Dogecoin : %.4f USD  %.2f'%(data['dogecoin']['usd'], data['dogecoin']['usd_24h_change']),
-    font='times 32',
+    font='Bahnschrift 32',fg="white",
     width=30,
-    bg= '#FF6B6B' if data['dogecoin']['usd_24h_change'] < 0 else '#6BFF6B',
+    bg= '#FF6B6B' if data['dogecoin']['usd_24h_change'] < 0 else '#5D8D73',
     command=lambda:show_frame(frame4))
-doge_btn.place(x=700, y=500)
+doge_btn.place(x=700, y=450)
 
-frame1_title=  tk.Label(frame1, text='Select Currency', font='times 24')
-frame1_title.place(x=700, y=225)
+frame1_title=  tk.Label(frame1, text='Select Currency:', font='times 24',fg="#333338")
+frame1_title.place(x=700, y=190)
 
-frame1_text_updateTime = tk.Label(frame1, text=f'Last Update: {now}', font='times 24')
-frame1_text_updateTime.place(x=700, y=600)
+frame1_text_updateTime = tk.Label(frame1, text=f'Last Update: {now}', font='Verdana 20 bold', fg="#333338")
+frame1_text_updateTime.place(x=700, y=560)
 
 # create a combobox
 selected_coin = tk.StringVar()
 coin = ttk.Combobox(
     frame1, 
-    font='times 24',
+    font='Candara 18',
     width=30,
     textvariable=selected_coin)
 
@@ -149,7 +149,7 @@ coin['state'] = 'readonly'
 coin.current(0)
 
 # place the widget
-coin.place(x=925, y=225)
+coin.place(x=925, y=195)
 
 
 def coin_changed(event):
@@ -168,11 +168,11 @@ def update_coin():
     window.after(30000,update_coin)
 
 #==================Frame 2 code
-frame2_title=  tk.Label(frame2, text='Bitcoin', font='times 35') 
-frame2_title.place(x=700, y=100)
+frame2_title=  tk.Label(frame2, text='Bitcoin', font='times 35 bold',fg="#282b36") 
+frame2_title.place(x=190, y=100)
 
 img_2 = tk.PhotoImage(file="bitcoin.png")
-ttk.Label(frame2, image=img_2).place(x=20, y=20)
+ttk.Label(frame2, image=img_2).place(x=100, y=200)
 
 # Grpah Code
 btc_fg1 = Figure(figsize=(5,5), dpi=100)
@@ -183,7 +183,7 @@ btc_fg1_plot.plot(btc_usd['Close'], label='USD')
 btc_fg1_plot.legend(loc='upper left')
 canvas1 = FigureCanvasTkAgg(btc_fg1, frame2)
 canvas1.draw()
-canvas1.get_tk_widget().place(x=600, y=200,width=800,height=250)
+canvas1.get_tk_widget().place(x=490, y=70,width=800,height=250)
 
 btc_fg2 = Figure(figsize=(5,5), dpi=100)
 btc_fg2_plot=btc_fg2.add_subplot(111)
@@ -193,23 +193,23 @@ btc_fg2_plot.plot(btc_thb['Close']*32.5, label='THB', color='green')
 btc_fg2_plot.legend(loc='upper left')
 canvas2 = FigureCanvasTkAgg(btc_fg2, frame2)
 canvas2.draw()
-canvas2.get_tk_widget().place(x=600, y=450,width=800,height=250)
+canvas2.get_tk_widget().place(x=490, y=340,width=800,height=250)
 
-save_btn = tk.Button(frame1, text='Save', font='times 24', command=lambda:save_data())
-save_btn.place(x=700, y=650)
-show_table_btn = tk.Button(frame1, text='Show Table', font='times 24',command=lambda:[show_frame(frame5),show_data()])
-show_table_btn.place(x=800, y=650)
+save_btn = tk.Button(frame1, text='Save', font='Cambria 24', fg="white", command=lambda:save_data(),bg='#e3b630')
+save_btn.place(x=700, y=610)
+show_table_btn = tk.Button(frame1, text='Show Table', font='Cambria 24', fg="white",command=lambda:[show_frame(frame5),show_data()],bg="#70c5d4")
+show_table_btn.place(x=800, y=610)
 
-frame2_btn_back = tk.Button(frame2, text='Home',command=lambda:show_frame(frame1),bg='#BFC9CA')
+frame2_btn_back = tk.Button(frame2, text='Home',font='Cambria 12 bold',fg="white",command=lambda:show_frame(frame1),bg='#6262cc')
 frame2_btn_back.pack(fill='x',ipady=15,side='bottom')
 
 
 #==================Frame 3 code
-frame3_title=  tk.Label(frame3, text='Ethereum',font='times 35')
-frame3_title.place(x=700, y=100)
+frame3_title=  tk.Label(frame3, text='Ethereum',font='times 35 bold',fg="#282b36")
+frame3_title.place(x=170, y=100)
 
 img_3 = tk.PhotoImage(file="ethereum.png")
-ttk.Label(frame3, image=img_3).place(x=100, y=250)
+ttk.Label(frame3, image=img_3).place(x=100, y=200)
 
 eth_fg1 = Figure(figsize=(5,5), dpi=100)
 eth_fg1_plot=eth_fg1.add_subplot(111)
@@ -219,7 +219,7 @@ eth_fg1_plot.plot(eth_usd['Close'], label='USD')
 eth_fg1_plot.legend(loc='upper left')
 canvas_eth1 = FigureCanvasTkAgg(eth_fg1, frame3)
 canvas_eth1.draw()
-canvas_eth1.get_tk_widget().place(x=600, y=200,width=800,height=250)
+canvas_eth1.get_tk_widget().place(x=490, y=70,width=800,height=250)
 
 eth_fg2 = Figure(figsize=(5,5), dpi=100)
 eth_fg2_plot=eth_fg2.add_subplot(111)
@@ -229,19 +229,19 @@ eth_fg2_plot.plot(eth_thb['Close']*32.5, label='THB', color='green')
 eth_fg2_plot.legend(loc='upper left')
 canvas_eth2 = FigureCanvasTkAgg(eth_fg2, frame3)
 canvas_eth2.draw()
-canvas_eth2.get_tk_widget().place(x=600, y=450,width=800,height=250)
+canvas_eth2.get_tk_widget().place(x=490, y=340,width=800,height=250)
 
 
 
-frame3_btn_back = tk.Button(frame3, text='Home',command=lambda:show_frame(frame1),bg='#BFC9CA')
+frame3_btn_back = tk.Button(frame3, text='Home',font='Cambria 12 bold',fg="white",command=lambda:show_frame(frame1),bg='#6262cc')
 frame3_btn_back.pack(fill='x',ipady=15,side='bottom')
 
 #==================Frame 4 code
-frame4_title=  tk.Label(frame4, text='Dogecoin',font='times 35')
-frame4_title.place(x=700, y=100)
+frame4_title=  tk.Label(frame4, text='Dogecoin',font='times 35 bold',fg="#282b36")
+frame4_title.place(x=170, y=100)
 
 img_4 = tk.PhotoImage(file="dogecoin.png")
-ttk.Label(frame4, image=img_4).place(x=100, y=250)
+ttk.Label(frame4, image=img_4).place(x=100, y=200)
 
 doge_fg1 = Figure(figsize=(5,5), dpi=100)
 doge_fg1_plot=doge_fg1.add_subplot(111)
@@ -251,7 +251,7 @@ doge_fg1_plot.plot(doge_usd['Close'], label='USD')
 doge_fg1_plot.legend(loc='upper left')
 canvas_doge1 = FigureCanvasTkAgg(doge_fg1, frame4)
 canvas_doge1.draw()
-canvas_doge1.get_tk_widget().place(x=600, y=200,width=800,height=250)
+canvas_doge1.get_tk_widget().place(x=490, y=70,width=800,height=250)
 
 doge_fg2 = Figure(figsize=(5,5), dpi=100)
 doge_fg2_plot=doge_fg2.add_subplot(111)
@@ -261,16 +261,16 @@ doge_fg2_plot.plot(doge_thb['Close']*32.5, label='THB', color='green')
 doge_fg2_plot.legend(loc='upper left')
 canvas_doge2 = FigureCanvasTkAgg(doge_fg2, frame4)
 canvas_doge2.draw()
-canvas_doge2.get_tk_widget().place(x=600, y=450,width=800,height=250)
+canvas_doge2.get_tk_widget().place(x=490, y=340,width=800,height=250)
 
 
 
-frame4_btn_back = tk.Button(frame4, text='Home',command=lambda:show_frame(frame1),bg='#BFC9CA')
+frame4_btn_back = tk.Button(frame4, text='Home',font='Cambria 13 bold',fg="white",command=lambda:show_frame(frame1),bg='#6262cc')
 frame4_btn_back.pack(fill='x',ipady=15,side='bottom')
 
 #==================Frame 5 code
 frame5_title=  tk.Label(frame5)
-frame_label = tk.Label(frame5, text='Record history', font='times 35')
+frame_label = tk.Label(frame5, text='Record history', font='times 35 bold',fg="#44415e")
 frame_label.pack(fill='x',ipady=15,side='top')
 frame5_title.place(x=700, y=100)
 col=('Time','Bitcoin[USD]','Bitcoin[THB]','Ethereum[USD]','Ethereum[THB]','Dogecoin[USD]','Dogecoin[THB]')
@@ -281,7 +281,7 @@ for i in col:
 
 frame5_table.pack(fill='both',expand=True)
 
-frame5_btn_back = tk.Button(frame5, text='Home',command=lambda:show_frame(frame1),bg='#BFC9CA')
+frame5_btn_back = tk.Button(frame5, text='Home',font='Cambria 13 bold',fg="white",command=lambda:show_frame(frame1),bg='#6262cc')
 frame5_btn_back.pack(fill='x',ipady=15,side='bottom')
 
 create_csv()
