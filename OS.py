@@ -10,6 +10,7 @@ from pycoingecko import CoinGeckoAPI
 from datetime import datetime
 import csv
 import time
+import os.path
 
 from ui_function import *
 
@@ -21,7 +22,6 @@ data = cg.get_price(
     include_24hr_vol='true',
     include_market_cap='true'
     )
-print(data)
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 def show_frame(frame):
@@ -354,7 +354,8 @@ frame5_table.pack(fill='both',expand=True)
 frame5_btn_back = tk.Button(frame5, text='Home',command=lambda:show_frame(frame1),bg='#BFC9CA')
 frame5_btn_back.pack(fill='x',ipady=15,side='bottom')
 
-create_csv()
+if not os.path.isfile('test.csv'):
+    create_csv()
 show_frame(frame1)
 update_coin()
 
