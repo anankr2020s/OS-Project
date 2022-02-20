@@ -7,6 +7,8 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
 NavigationToolbar2Tk)
 from pycoingecko import CoinGeckoAPI
 from datetime import datetime
+import csv
+import time
 
 from ui_function import *
 
@@ -18,17 +20,47 @@ now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 def show_frame(frame):
     frame.tkraise()
 
+def create_csv():
+    print('Creating CSV...')
+    with open('E:/OS/test.csv', 'w', newline='') as csvfile:
+        fieldnames = ['Time',
+                      'bitcoin[usb]', '[bitcoin]usd_24h_change', 'bitcoin[thb]', '[bitcoin]thb_24h_change',
+                      'ethereum[usb]', '[ethereum]usd_24h_change', 'ethereum[thb]', '[ethereum]thb_24h_change',
+                      'dogecoin[usb]', '[dogecoin]usd_24h_change', 'dogecoin[thb]', '[dogecoin]thb_24h_change', ]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
+
+def save_data():
+    print('Saving data...')
+    data = cg.get_price(ids=['bitcoin', 'ethereum', 'dogecoin'], vs_currencies=['usd', 'thb'], include_24hr_change='true')
+    localtime = time.localtime()
+    with open('E:/OS/test.csv', 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow([time.strftime("%d/%m/%Y %H:%M:%S", localtime),
+        data['bitcoin']['usd'], data['bitcoin']['usd_24h_change'], data['bitcoin']['thb'], data['bitcoin']['thb_24h_change'],
+        data['ethereum']['usd'], data['ethereum']['usd_24h_change'], data['ethereum']['thb'], data['ethereum']['thb_24h_change'],
+        data['dogecoin']['usd'], data['dogecoin']['usd_24h_change'], data['dogecoin']['thb'], data['dogecoin']['thb_24h_change']
+        ])
+    print(time.strftime('%I:%M:%S', localtime),'Save to file price.csv complete')
+def read_csv():
+    print('Reading CSV...')
+    with open('E:/OS/test.csv', 'r') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            print(row['Time'],row['bitcoin[usb]'],row['bitcoin[thb]'],row['ethereum[usb]'],row['ethereum[thb]'],row['dogecoin[usb]'],row['dogecoin[thb]'])
+
 def currency_changed():
     btc_btn.configure(
-        text='Bitcoin : %.2f %s %.2f'%(data['bitcoin'][selected_coin.get()], selected_coin.get(), data['bitcoin'][f'{selected_coin.get()}_24h_change']),
+        text='Bitcoin : %.2f %s %.2f'%(data['bitcoin'][selected_coin.get()], selected_coin.get().upper(), data['bitcoin'][f'{selected_coin.get()}_24h_change']),
         bg='#FF6B6B' if data['bitcoin'][f'{selected_coin.get()}_24h_change'] <= 0 else '#6BFF6B'
     )
     eth_btn.configure(
-        text='Ethereum : %.2f %s %.2f'%(data['ethereum'][selected_coin.get()], selected_coin.get(), data['ethereum'][f'{selected_coin.get()}_24h_change']),
+        text='Ethereum : %.2f %s %.2f'%(data['ethereum'][selected_coin.get()], selected_coin.get().upper(), data['ethereum'][f'{selected_coin.get()}_24h_change']),
         bg='#FF6B6B' if data['ethereum'][f'{selected_coin.get()}_24h_change'] <= 0 else '#6BFF6B'
     )
     doge_btn.configure(
-        text='Dogecoin : %.4f %s %.2f'%(data['dogecoin'][selected_coin.get()], selected_coin.get(), data['dogecoin'][f'{selected_coin.get()}_24h_change']),
+        text='Dogecoin : %.4f %s %.2f'%(data['dogecoin'][selected_coin.get()], selected_coin.get().upper(), data['dogecoin'][f'{selected_coin.get()}_24h_change']),
         bg='#FF6B6B' if data['dogecoin'][f'{selected_coin.get()}_24h_change'] <= 0 else '#6BFF6B'
     )
 
@@ -42,8 +74,9 @@ frame1 = tk.Frame(window)
 frame2 = tk.Frame(window)
 frame3 = tk.Frame(window)
 frame4 = tk.Frame(window)
+frame5 = tk.Frame(window)
 
-for frame in (frame1, frame2, frame3, frame4):
+for frame in (frame1, frame2, frame3, frame4,frame5):
     frame.grid(row=0,column=0,sticky='nsew')
 
 #=========== Menu Bar
@@ -159,6 +192,10 @@ canvas2 = FigureCanvasTkAgg(btc_fg2, frame2)
 canvas2.draw()
 canvas2.get_tk_widget().place(x=600, y=450,width=800,height=250)
 
+save_btn = tk.Button(frame1, text='Save', font='times 24', command=lambda:save_data())
+save_btn.place(x=700, y=650)
+show_table_btn = tk.Button(frame1, text='Show Table', font='times 24',command=lambda:[show_frame(frame5),read_csv()])
+show_table_btn.place(x=800, y=650)
 
 frame2_btn_back = tk.Button(frame2, text='Home',command=lambda:show_frame(frame1),bg='#BFC9CA')
 frame2_btn_back.pack(fill='x',ipady=15,side='bottom')
@@ -196,7 +233,7 @@ canvas_eth2.get_tk_widget().place(x=600, y=450,width=800,height=250)
 frame3_btn_back = tk.Button(frame3, text='Home',command=lambda:show_frame(frame1),bg='#BFC9CA')
 frame3_btn_back.pack(fill='x',ipady=15,side='bottom')
 
-#==================Frame 3 code
+#==================Frame 4 code
 frame4_title=  tk.Label(frame4, text='Dogecoin',font='times 35')
 frame4_title.place(x=700, y=100)
 
@@ -228,6 +265,30 @@ canvas_doge2.get_tk_widget().place(x=600, y=450,width=800,height=250)
 frame4_btn_back = tk.Button(frame4, text='Home',command=lambda:show_frame(frame1),bg='#BFC9CA')
 frame4_btn_back.pack(fill='x',ipady=15,side='bottom')
 
+#==================Frame 5 code
+frame5_title=  tk.Label(frame5)
+frame_label = tk.Label(frame5, text='Data Table', font='times 35')
+frame_label.pack(fill='x',ipady=15,side='top')
+frame5_title.place(x=700, y=100)
+col=('Time','Bitcoin[USD]','Bitcoin[THB]','Ethereum[USD]','Ethereum[THB]','Dogecoin[USD]','Dogecoin[THB]')
+frame5_table = ttk.Treeview(frame5, columns=col, height=10)
+for i in col:
+    frame5_table.heading(i, text=i, anchor='center')
+    frame5_table.column(i, width=100)
+
+with open('E:/OS/test.csv', 'r') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        frame5_table.insert('',0,values=(row['Time'],row['bitcoin[usb]'],row['bitcoin[thb]'],
+        row['ethereum[usb]'],row['ethereum[thb]'],
+        row['dogecoin[usb]'],row['dogecoin[thb]']))
+
+frame5_table.pack(fill='both',expand=True)
+
+frame5_btn_back = tk.Button(frame5, text='Home',command=lambda:show_frame(frame1),bg='#BFC9CA')
+frame5_btn_back.pack(fill='x',ipady=15,side='bottom')
+
+create_csv()
 show_frame(frame1)
 update_coin()
 
