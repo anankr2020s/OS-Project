@@ -43,12 +43,15 @@ def save_data():
         data['dogecoin']['usd'], data['dogecoin']['usd_24h_change'], data['dogecoin']['thb'], data['dogecoin']['thb_24h_change']
         ])
     print(time.strftime('%I:%M:%S', localtime),'Save to file price.csv complete')
-def read_csv():
-    print('Reading CSV...')
+
+def show_data():
+    frame5_table.delete(*frame5_table.get_children())
     with open('E:/OS/test.csv', 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            print(row['Time'],row['bitcoin[usb]'],row['bitcoin[thb]'],row['ethereum[usb]'],row['ethereum[thb]'],row['dogecoin[usb]'],row['dogecoin[thb]'])
+            frame5_table.insert('',0,values=(row['Time'],row['bitcoin[usb]'],row['bitcoin[thb]'],
+            row['ethereum[usb]'],row['ethereum[thb]'],
+            row['dogecoin[usb]'],row['dogecoin[thb]']))
 
 def currency_changed():
     btc_btn.configure(
@@ -194,7 +197,7 @@ canvas2.get_tk_widget().place(x=600, y=450,width=800,height=250)
 
 save_btn = tk.Button(frame1, text='Save', font='times 24', command=lambda:save_data())
 save_btn.place(x=700, y=650)
-show_table_btn = tk.Button(frame1, text='Show Table', font='times 24',command=lambda:[show_frame(frame5),read_csv()])
+show_table_btn = tk.Button(frame1, text='Show Table', font='times 24',command=lambda:[show_frame(frame5),show_data()])
 show_table_btn.place(x=800, y=650)
 
 frame2_btn_back = tk.Button(frame2, text='Home',command=lambda:show_frame(frame1),bg='#BFC9CA')
@@ -267,7 +270,7 @@ frame4_btn_back.pack(fill='x',ipady=15,side='bottom')
 
 #==================Frame 5 code
 frame5_title=  tk.Label(frame5)
-frame_label = tk.Label(frame5, text='Data Table', font='times 35')
+frame_label = tk.Label(frame5, text='Record history', font='times 35')
 frame_label.pack(fill='x',ipady=15,side='top')
 frame5_title.place(x=700, y=100)
 col=('Time','Bitcoin[USD]','Bitcoin[THB]','Ethereum[USD]','Ethereum[THB]','Dogecoin[USD]','Dogecoin[THB]')
@@ -275,13 +278,6 @@ frame5_table = ttk.Treeview(frame5, columns=col, height=10)
 for i in col:
     frame5_table.heading(i, text=i, anchor='center')
     frame5_table.column(i, width=100)
-
-with open('E:/OS/test.csv', 'r') as csvfile:
-    reader = csv.DictReader(csvfile)
-    for row in reader:
-        frame5_table.insert('',0,values=(row['Time'],row['bitcoin[usb]'],row['bitcoin[thb]'],
-        row['ethereum[usb]'],row['ethereum[thb]'],
-        row['dogecoin[usb]'],row['dogecoin[thb]']))
 
 frame5_table.pack(fill='both',expand=True)
 
