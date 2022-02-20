@@ -22,6 +22,8 @@ data = cg.get_price(
     include_24hr_vol='true',
     include_market_cap='true'
     )
+
+path = 'C:/Users/USER/OS-Project/test.csv'
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 def show_frame(frame):
@@ -29,7 +31,7 @@ def show_frame(frame):
 
 def create_csv():
     print('Creating CSV...')
-    with open('D:/OS-Project/test.csv', 'w', newline='') as csvfile:
+    with open(path, 'w', newline='') as csvfile:
         fieldnames = ['Time',
                       'bitcoin[usb]', '[bitcoin]usd_24h_change', 'bitcoin[thb]', '[bitcoin]thb_24h_change',
                       'ethereum[usb]', '[ethereum]usd_24h_change', 'ethereum[thb]', '[ethereum]thb_24h_change',
@@ -41,7 +43,7 @@ def create_csv():
 def save_data():
     print('Saving data...')
     localtime = time.localtime()
-    with open('D:/OS-Project/test.csv', 'a', newline='') as csvfile:
+    with open(path, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow([time.strftime("%d/%m/%Y %H:%M:%S", localtime),
         data['bitcoin']['usd'], data['bitcoin']['usd_24h_change'], data['bitcoin']['thb'], data['bitcoin']['thb_24h_change'],
@@ -52,7 +54,7 @@ def save_data():
 
 def show_data():
     frame5_table.delete(*frame5_table.get_children())
-    with open('D:/OS-Project/test.csv', 'r') as csvfile:
+    with open(path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             frame5_table.insert('',0,values=(row['Time'],row['bitcoin[usb]'],row['bitcoin[thb]'],
@@ -74,7 +76,7 @@ def currency_changed():
     )
 
 window = tk.Tk()
-window.state('zoomed')
+window.attributes('-fullscreen', True)
 
 window.rowconfigure(0, weight=1)
 window.columnconfigure(0, weight=1)
@@ -180,7 +182,7 @@ def update_coin():
 
 #==================Frame 2 code
 frame2_title=  tk.Label(frame2, text='Bitcoin', font='times 35 bold',fg="#282b36") 
-frame2_title.place(x=190, y=100)
+frame2_title.place(x=700, y=100)
 
 img_2 = tk.PhotoImage(file="bitcoin.png")
 ttk.Label(frame2, image=img_2).place(x=120, y=20)
@@ -194,7 +196,7 @@ btc_fg1_plot.plot(btc_usd['Close'], label='USD')
 btc_fg1_plot.legend(loc='upper left')
 canvas1 = FigureCanvasTkAgg(btc_fg1, frame2)
 canvas1.draw()
-canvas1.get_tk_widget().place(x=490, y=70,width=800,height=250)
+canvas1.get_tk_widget().place(x=600, y=200,width=800,height=250)
 
 btc_fg2 = Figure(figsize=(5,5), dpi=100)
 btc_fg2_plot=btc_fg2.add_subplot(111)
@@ -204,7 +206,7 @@ btc_fg2_plot.plot(btc_thb['Close']*32.5, label='THB', color='green')
 btc_fg2_plot.legend(loc='upper left')
 canvas2 = FigureCanvasTkAgg(btc_fg2, frame2)
 canvas2.draw()
-canvas2.get_tk_widget().place(x=490, y=340,width=800,height=250)
+canvas2.get_tk_widget().place(x=600, y=450,width=800,height=250)
 
 save_btn = tk.Button(frame1, text='Save', font='Cambria 24', fg="white", command=lambda:save_data(),bg='#e3b630')
 save_btn.place(x=700, y=610)
@@ -238,7 +240,7 @@ frame2_btn_back.pack(fill='x',ipady=15,side='bottom')
 
 #==================Frame 3 code
 frame3_title=  tk.Label(frame3, text='Ethereum',font='times 35 bold',fg="#282b36")
-frame3_title.place(x=170, y=100)
+frame3_title.place(x=700, y=100)
 
 img_3 = tk.PhotoImage(file="ethereum.png")
 ttk.Label(frame3, image=img_3).place(x=120, y=20)
@@ -251,7 +253,7 @@ eth_fg1_plot.plot(eth_usd['Close'], label='USD')
 eth_fg1_plot.legend(loc='upper left')
 canvas_eth1 = FigureCanvasTkAgg(eth_fg1, frame3)
 canvas_eth1.draw()
-canvas_eth1.get_tk_widget().place(x=490, y=70,width=800,height=250)
+canvas_eth1.get_tk_widget().place(x=600, y=200,width=800,height=250)
 
 eth_fg2 = Figure(figsize=(5,5), dpi=100)
 eth_fg2_plot=eth_fg2.add_subplot(111)
@@ -261,7 +263,7 @@ eth_fg2_plot.plot(eth_thb['Close']*32.5, label='THB', color='green')
 eth_fg2_plot.legend(loc='upper left')
 canvas_eth2 = FigureCanvasTkAgg(eth_fg2, frame3)
 canvas_eth2.draw()
-canvas_eth2.get_tk_widget().place(x=490, y=340,width=800,height=250)
+canvas_eth2.get_tk_widget().place(x=600, y=450,width=800,height=250)
 
 txt_cap_eth = tk.Label(frame3,
      text='Market Cap : \n%.2f USD\n%.2f THB'%(data['ethereum']['usd_market_cap'], data['ethereum']['thb_market_cap']), 
@@ -289,7 +291,7 @@ frame3_btn_back.pack(fill='x',ipady=15,side='bottom')
 
 #==================Frame 4 code
 frame4_title=  tk.Label(frame4, text='Dogecoin',font='times 35 bold',fg="#282b36")
-frame4_title.place(x=170, y=100)
+frame4_title.place(x=700, y=100)
 
 img_4 = tk.PhotoImage(file="dogecoin.png")
 ttk.Label(frame4, image=img_4).place(x=120, y=20)
@@ -302,7 +304,7 @@ doge_fg1_plot.plot(doge_usd['Close'], label='USD')
 doge_fg1_plot.legend(loc='upper left')
 canvas_doge1 = FigureCanvasTkAgg(doge_fg1, frame4)
 canvas_doge1.draw()
-canvas_doge1.get_tk_widget().place(x=490, y=70,width=800,height=250)
+canvas_doge1.get_tk_widget().place(x=600, y=200,width=800,height=250)
 
 doge_fg2 = Figure(figsize=(5,5), dpi=100)
 doge_fg2_plot=doge_fg2.add_subplot(111)
@@ -312,7 +314,7 @@ doge_fg2_plot.plot(doge_thb['Close']*32.5, label='THB', color='green')
 doge_fg2_plot.legend(loc='upper left')
 canvas_doge2 = FigureCanvasTkAgg(doge_fg2, frame4)
 canvas_doge2.draw()
-canvas_doge2.get_tk_widget().place(x=490, y=340,width=800,height=250)
+canvas_doge2.get_tk_widget().place(x=600, y=450,width=800,height=250)
 
 txt_cap_doge = tk.Label(frame4,
      text='Market Cap : \n%.2f USD\n%.2f THB'%(data['dogecoin']['usd_market_cap'], data['dogecoin']['thb_market_cap']), 
