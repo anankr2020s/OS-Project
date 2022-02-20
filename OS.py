@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from xml.etree.ElementInclude import include
 from matplotlib.figure import Figure
 import matplotlib
 matplotlib.use('TkAgg')
@@ -9,12 +10,18 @@ from pycoingecko import CoinGeckoAPI
 from datetime import datetime
 import csv
 import time
+import os.path
 
 from ui_function import *
 
 cg = CoinGeckoAPI()
-data = cg.get_price(ids=['bitcoin', 'ethereum', 'dogecoin'], vs_currencies=[
-                     'usd', 'thb'], include_24hr_change='true')
+data = cg.get_price(
+    ids=['bitcoin', 'ethereum', 'dogecoin'], 
+    vs_currencies=['usd', 'thb'], 
+    include_24hr_change='true',
+    include_24hr_vol='true',
+    include_market_cap='true'
+    )
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 def show_frame(frame):
@@ -33,7 +40,6 @@ def create_csv():
 
 def save_data():
     print('Saving data...')
-    data = cg.get_price(ids=['bitcoin', 'ethereum', 'dogecoin'], vs_currencies=['usd', 'thb'], include_24hr_change='true')
     localtime = time.localtime()
     with open('D:/OS-Project/test.csv', 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
@@ -160,8 +166,13 @@ coin.bind('<<ComboboxSelected>>', coin_changed)
 def update_coin():
     global data
     global now
-    data = cg.get_price(ids=['bitcoin', 'ethereum', 'dogecoin'], vs_currencies=[
-                     'usd', 'thb'], include_24hr_change='true')
+    data = cg.get_price(
+        ids=['bitcoin', 'ethereum', 'dogecoin'], 
+        vs_currencies=['usd', 'thb'], 
+        include_24hr_change='true',
+        include_24hr_vol='true',
+        include_market_cap='true'
+    )
     now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     currency_changed()
     frame1_text_updateTime.configure(text=f'Last Update: {now}')
@@ -172,7 +183,7 @@ frame2_title=  tk.Label(frame2, text='Bitcoin', font='times 35 bold',fg="#282b36
 frame2_title.place(x=190, y=100)
 
 img_2 = tk.PhotoImage(file="bitcoin.png")
-ttk.Label(frame2, image=img_2).place(x=100, y=200)
+ttk.Label(frame2, image=img_2).place(x=120, y=20)
 
 # Grpah Code
 btc_fg1 = Figure(figsize=(5,5), dpi=100)
@@ -200,6 +211,27 @@ save_btn.place(x=700, y=610)
 show_table_btn = tk.Button(frame1, text='Show Table', font='Cambria 24', fg="white",command=lambda:[show_frame(frame5),show_data()],bg="#70c5d4")
 show_table_btn.place(x=800, y=610)
 
+txt_cap_btc = tk.Label(frame2,
+     text='Market Cap : \n%.2f USD\n%.2f THB'%(data['bitcoin']['usd_market_cap'], data['bitcoin']['thb_market_cap']), 
+     font='times 18',
+     bg='#998AFF'
+     ) 
+txt_cap_btc.place(x=120, y=380)
+
+txt_vol_btc = tk.Label(frame2,
+     text='Volume 24h : \n%.2f USD\n%.2f THB'%(data['bitcoin']['usd_24h_vol'], data['bitcoin']['thb_24h_vol']), 
+     font='times 18',
+     bg='#998AFF'
+     ) 
+txt_vol_btc.place(x=120, y=480)
+
+txt_vol_btc = tk.Label(frame2,
+     text='Volume 24h : \n%.2f%% (USD)\n%.2f%% (THB)'%(data['bitcoin']['usd_24h_change'], data['bitcoin']['thb_24h_change']), 
+     font='times 18',
+     bg='#FF6B6B' if data['bitcoin']['usd_24h_change'] < 0 else '#6BFF6B'
+     ) 
+txt_vol_btc.place(x=120, y=580)
+
 frame2_btn_back = tk.Button(frame2, text='Home',font='Cambria 12 bold',fg="white",command=lambda:show_frame(frame1),bg='#6262cc')
 frame2_btn_back.pack(fill='x',ipady=15,side='bottom')
 
@@ -209,7 +241,7 @@ frame3_title=  tk.Label(frame3, text='Ethereum',font='times 35 bold',fg="#282b36
 frame3_title.place(x=170, y=100)
 
 img_3 = tk.PhotoImage(file="ethereum.png")
-ttk.Label(frame3, image=img_3).place(x=100, y=200)
+ttk.Label(frame3, image=img_3).place(x=120, y=20)
 
 eth_fg1 = Figure(figsize=(5,5), dpi=100)
 eth_fg1_plot=eth_fg1.add_subplot(111)
@@ -231,7 +263,26 @@ canvas_eth2 = FigureCanvasTkAgg(eth_fg2, frame3)
 canvas_eth2.draw()
 canvas_eth2.get_tk_widget().place(x=490, y=340,width=800,height=250)
 
+txt_cap_eth = tk.Label(frame3,
+     text='Market Cap : \n%.2f USD\n%.2f THB'%(data['ethereum']['usd_market_cap'], data['ethereum']['thb_market_cap']), 
+     font='times 18',
+     bg='#998AFF'
+     ) 
+txt_cap_eth.place(x=120, y=380)
 
+txt_vol_eth = tk.Label(frame3,
+     text='Volume 24h : \n%.2f USD\n%.2f THB'%(data['ethereum']['usd_24h_vol'], data['ethereum']['thb_24h_vol']), 
+     font='times 18',
+     bg='#998AFF'
+     ) 
+txt_vol_eth.place(x=120, y=480)
+
+txt_change_eth = tk.Label(frame3,
+     text='Volume 24h : \n%.2f%% (USD)\n%.2f%% (THB)'%(data['ethereum']['usd_24h_change'], data['ethereum']['thb_24h_change']), 
+     font='times 18',
+     bg='#FF6B6B' if data['ethereum']['usd_24h_change'] < 0 else '#6BFF6B'
+     ) 
+txt_change_eth.place(x=120, y=580)
 
 frame3_btn_back = tk.Button(frame3, text='Home',font='Cambria 12 bold',fg="white",command=lambda:show_frame(frame1),bg='#6262cc')
 frame3_btn_back.pack(fill='x',ipady=15,side='bottom')
@@ -241,7 +292,7 @@ frame4_title=  tk.Label(frame4, text='Dogecoin',font='times 35 bold',fg="#282b36
 frame4_title.place(x=170, y=100)
 
 img_4 = tk.PhotoImage(file="dogecoin.png")
-ttk.Label(frame4, image=img_4).place(x=100, y=200)
+ttk.Label(frame4, image=img_4).place(x=120, y=20)
 
 doge_fg1 = Figure(figsize=(5,5), dpi=100)
 doge_fg1_plot=doge_fg1.add_subplot(111)
@@ -263,7 +314,26 @@ canvas_doge2 = FigureCanvasTkAgg(doge_fg2, frame4)
 canvas_doge2.draw()
 canvas_doge2.get_tk_widget().place(x=490, y=340,width=800,height=250)
 
+txt_cap_doge = tk.Label(frame4,
+     text='Market Cap : \n%.2f USD\n%.2f THB'%(data['dogecoin']['usd_market_cap'], data['dogecoin']['thb_market_cap']), 
+     font='times 18',
+     bg='#998AFF'
+     ) 
+txt_cap_doge.place(x=120, y=380)
 
+txt_vol_doge = tk.Label(frame4,
+     text='Volume 24h : \n%.2f USD\n%.2f THB'%(data['dogecoin']['usd_24h_vol'], data['dogecoin']['thb_24h_vol']), 
+     font='times 18',
+     bg='#998AFF'
+     ) 
+txt_vol_doge.place(x=120, y=480)
+
+txt_change_doge = tk.Label(frame4,
+     text='Volume 24h : \n%.2f%% (USD)\n%.2f%% (THB)'%(data['dogecoin']['usd_24h_change'], data['dogecoin']['thb_24h_change']), 
+     font='times 18',
+     bg='#FF6B6B' if data['dogecoin']['usd_24h_change'] < 0 else '#6BFF6B'
+     ) 
+txt_change_doge.place(x=120, y=580)
 
 frame4_btn_back = tk.Button(frame4, text='Home',font='Cambria 13 bold',fg="white",command=lambda:show_frame(frame1),bg='#6262cc')
 frame4_btn_back.pack(fill='x',ipady=15,side='bottom')
@@ -284,7 +354,8 @@ frame5_table.pack(fill='both',expand=True)
 frame5_btn_back = tk.Button(frame5, text='Home',font='Cambria 13 bold',fg="white",command=lambda:show_frame(frame1),bg='#6262cc')
 frame5_btn_back.pack(fill='x',ipady=15,side='bottom')
 
-create_csv()
+if not os.path.isfile('test.csv'):
+    create_csv()
 show_frame(frame1)
 update_coin()
 
