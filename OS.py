@@ -224,7 +224,7 @@ txt_vol_btc = tk.Label(frame2,
 txt_vol_btc.place(x=120, y=480)
 
 txt_vol_btc = tk.Label(frame2,
-     text='Volume 24h : \n%.2f%% (USD)\n%.2f%% (THB)'%(data['bitcoin']['usd_24h_change'], data['bitcoin']['thb_24h_change']), 
+     text='Change 24h : \n%.2f%% (USD)\n%.2f%% (THB)'%(data['bitcoin']['usd_24h_change'], data['bitcoin']['thb_24h_change']), 
      font='times 18',
      bg='#FF6B6B' if data['bitcoin']['usd_24h_change'] < 0 else '#6BFF6B'
      ) 
@@ -276,7 +276,7 @@ txt_vol_eth = tk.Label(frame3,
 txt_vol_eth.place(x=120, y=480)
 
 txt_change_eth = tk.Label(frame3,
-     text='Volume 24h : \n%.2f%% (USD)\n%.2f%% (THB)'%(data['ethereum']['usd_24h_change'], data['ethereum']['thb_24h_change']), 
+     text='Change 24h : \n%.2f%% (USD)\n%.2f%% (THB)'%(data['ethereum']['usd_24h_change'], data['ethereum']['thb_24h_change']), 
      font='times 18',
      bg='#FF6B6B' if data['ethereum']['usd_24h_change'] < 0 else '#6BFF6B'
      ) 
@@ -327,7 +327,7 @@ txt_vol_doge = tk.Label(frame4,
 txt_vol_doge.place(x=120, y=480)
 
 txt_change_doge = tk.Label(frame4,
-     text='Volume 24h : \n%.2f%% (USD)\n%.2f%% (THB)'%(data['dogecoin']['usd_24h_change'], data['dogecoin']['thb_24h_change']), 
+     text='Change 24h : \n%.2f%% (USD)\n%.2f%% (THB)'%(data['dogecoin']['usd_24h_change'], data['dogecoin']['thb_24h_change']), 
      font='times 18',
      bg='#FF6B6B' if data['dogecoin']['usd_24h_change'] < 0 else '#6BFF6B'
      ) 
@@ -358,3 +358,4 @@ show_frame(frame1)
 update_coin()
 
 window.mainloop()
+
